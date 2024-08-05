@@ -5,7 +5,6 @@
 
 import streamlit as st
 from pymongo import MongoClient, errors
-import pandas as pd
 
 # Intentar conectar a MongoDB
 try:
@@ -28,7 +27,7 @@ if st.button("Buscar"):
     if id_codigo:
         result = collection.find_one({"idCodigo": id_codigo})
         if result:
-            # Crear un DataFrame con los datos del resultado
+            # Mostrar los campos disponibles
             fields = [
                 "idCodigo", "idPGY", "nombreTienda", "departamento", "provincia",
                 "distrito", "direccion", "Longitud", "Fecha Instalación", "Fecha Baja",
@@ -44,15 +43,11 @@ if st.button("Buscar"):
                 "trxTotalGC", "trxGIROS", "trxTinka", "trxFullPagos", "metaOZ",
                 "metaAg", "% AvanceFull", "Equipo", "¿Visitado?"
             ]
-
-            # Convertir los datos a un DataFrame de pandas
-            data = {field: [result.get(field, "N/A")] for field in fields}
-            df = pd.DataFrame(data)
-
-            # Mostrar los datos en una tabla
-            st.dataframe(df, use_container_width=True)
+            
+            for field in fields:
+                value = result.get(field, "N/A")
+                st.write(f"**{field}:**", value)
         else:
             st.error("No se encontró ninguna tienda con el idCodigo proporcionado.")
     else:
         st.error("Por favor, ingrese un idCodigo.")
-

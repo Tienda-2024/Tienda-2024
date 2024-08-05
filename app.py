@@ -2,8 +2,6 @@
 #python.exe -m pip install --upgrade pip
 #pip install streamlit pymongo
 #cd \Globokas\ScoringPython
-
-
 import streamlit as st
 from pymongo import MongoClient, errors
 
@@ -28,14 +26,26 @@ if st.button("Buscar"):
     if id_codigo:
         result = collection.find_one({"idCodigo": id_codigo})
         if result:
-            st.write("**Nombre de la Tienda:**", result.get("nombreTienda", "N/A"))
-            st.write("**Departamento:**", result.get("departamento", "N/A"))
-            st.write("**Provincia:**", result.get("provincia", "N/A"))
-            st.write("**Distrito:**", result.get("distrito", "N/A"))
-            st.write("**Categoría:**", result.get("categoría", "N/A"))
-            st.write("**Región:**", result.get("region", "N/A"))
-            st.write("**Zona:**", result.get("zona", "N/A"))
-            st.write("**Transacciones FullPagos:**", result.get("trxFullPagos", "N/A"))
+            # Mostrar los campos disponibles
+            fields = [
+                "idCodigo", "idPGY", "nombreTienda", "departamento", "provincia",
+                "distrito", "direccion", "Longitud", "Fecha Instalación", "Fecha Baja",
+                "tipoAgente", "estadoKasnet", "estadoPGY", "tipoPGY", "telefono_1",
+                "telefono_2", "categoría", "region", "zona", "Operador Zonal", 
+                "supervisor", "PlanMigr", "sectorZona", "latitude", "longitude",
+                "Lista Negra", "¿Firmó?", "trxPGYNov", "trxPGYDic", "trxPGYEne",
+                "trxPGYFeb", "trxPGYMar", "trxPGYActual", "Nov_23_Kas", "Dic_23_Kas",
+                "Ene_24_Kas", "Feb_24_Kas", "Mar_24_Kas", "KasActual", "nov_23",
+                "Dic_23", "En_24", "Feb_24", "Mar_24", "AvanceAntes", "avanActual",
+                "Proyección", "Var_Mar_Abr", "saldo", "regMontoProm", "trxHidra",
+                "comiHidra", "trxSEAL", "trxPgEfe", "Comi_PagEf", "trxTotalGE",
+                "trxTotalGC", "trxGIROS", "trxTinka", "trxFullPagos", "metaOZ",
+                "metaAg", "% AvanceFull", "Equipo", "¿Visitado?"
+            ]
+            
+            for field in fields:
+                value = result.get(field, "N/A")
+                st.write(f"**{field}:**", value)
         else:
             st.error("No se encontró ninguna tienda con el idCodigo proporcionado.")
     else:

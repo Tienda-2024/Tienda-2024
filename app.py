@@ -6,13 +6,12 @@
 import streamlit as st
 from pymongo import MongoClient, errors
 
-# Estilo CSS para mejorar la apariencia
+# Estilo CSS para mejorar la apariencia y ocultar elementos
 st.markdown(
     """
     <style>
     .reportview-container {
         background: #f0f2f6;
-        
     }
     .css-1d391kg {
         background-color: #f0f2f6;
@@ -37,6 +36,10 @@ st.markdown(
         border: 2px solid #007bff;
         border-radius: 5px;
         padding: 10px;
+    }
+    /* Ocultar ícono de GitHub y menú de opciones */
+    header .decoration, header [data-testid="stDecoration"], header [data-testid="stToolbar"] {
+        display: none;
     }
     </style>
     """, 

@@ -37,8 +37,20 @@ st.markdown(
         border-radius: 5px;
         padding: 10px;
     }
-    /* Ocultar ícono de GitHub y menú de opciones */
-    header .decoration, header [data-testid="stDecoration"], header [data-testid="stToolbar"] {
+    /* Estilo para el título de la aplicación */
+    .stTitle {
+        margin-top: -50px;
+        font-size: 24px;
+    }
+    /* Ocultar ícono de GitHub y menú de opciones, mostrar solo Share */
+    header .decoration, header [data-testid="stDecoration"] {
+        display: none;
+    }
+    header [data-testid="stToolbar"] {
+        display: flex;
+        justify-content: space-between;
+    }
+    header [data-testid="stToolbar"] > div:nth-child(2) {
         display: none;
     }
     </style>

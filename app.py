@@ -25,8 +25,11 @@ st.markdown(
         background-color: #007bff;
         color: white;
         border: none;
-        border-radius: 5px;
+        border-radius: 3px;
         padding: 10px;
+        height: 40px;  /* Ajusta la altura del botón */
+        margin-left: 10px;  /* Agrega un margen a la izquierda del botón */
+        margin-top: 27px;  /* Agrega un margen superior para alinear con el input */
     }
     .stButton>button:hover {
         background-color: #0056b3;
@@ -36,11 +39,12 @@ st.markdown(
         border: 2px solid #007bff;
         border-radius: 5px;
         padding: 10px;
+        /*height: 40px; Ajusta la altura del input para que coincida con el botón */
+        /*margin-top: 5px; Agrega un margen superior para alinear con el botón */
     }
     /* Estilo para el título de la aplicación */
     .stTitle {
-        margin-top: -50px;
-        font-size: 24px;
+        font-size: 20px;  /* Disminuye el tamaño del texto del título */
     }
     /* Ocultar ícono de GitHub y menú de opciones, mostrar solo Share */
     header .decoration, header [data-testid="stDecoration"] {
@@ -54,7 +58,7 @@ st.markdown(
         display: none;
     }
     </style>
-    """, 
+    """,
     unsafe_allow_html=True
 )
 
@@ -63,7 +67,7 @@ try:
     client = MongoClient("mongodb+srv://mhuaman:0AcY7h5YMFqWCvRS@innova.gfmnmzd.mongodb.net/?retryWrites=true&w=majority&appName=Innova")
     db = client["mhuaman"]
     collection = db["tb_tiendas"]
-    st.success("Conexión exitosa")
+    #st.success("Conexión a MongoDB exitosa")
 except errors.ConnectionError:
     st.error("No se pudo conectar a MongoDB. Verifique la URL y las credenciales.")
     st.stop()  # Detiene la ejecución del script si no se puede conectar
@@ -71,11 +75,19 @@ except errors.ConnectionError:
 # Título de la aplicación
 st.title("Buscador de Tiendas")
 
-# Entrada de texto para buscar por idCodigo
-id_codigo = st.text_input("Ingrese el idCodigo para buscar la tienda:")
+# Columnas para input y botón
+col1, col2 = st.columns([2, 2])
+
+# Input en la primera columna con placeholder y etiqueta oculta
+with col1:
+    id_codigo = st.text_input("Código de Tienda", placeholder="Ingrese el idCodigo para buscar la tienda", label_visibility="hidden")
+
+# Botón en la segunda columna
+with col2:
+    buscar = st.button("Buscar")
 
 # Botón para ejecutar la búsqueda
-if st.button("Buscar"):
+if buscar:
     if id_codigo:
         result = collection.find_one({"idCodigo": id_codigo})
         if result:
@@ -85,15 +97,9 @@ if st.button("Buscar"):
                 "distrito", "direccion", "Longitud", "Fecha Instalación", "Fecha Baja",
                 "tipoAgente", "estadoKasnet", "estadoPGY", "tipoPGY", "telefono_1",
                 "telefono_2", "categoría", "region", "zona", "Operador Zonal", 
-                "supervisor", "PlanMigr", "sectorZona", "latitude", "longitude",
-                "Lista Negra", "¿Firmó?", "trxPGYNov", "trxPGYDic", "trxPGYEne",
-                "trxPGYFeb", "trxPGYMar", "trxPGYActual", "Nov_23_Kas", "Dic_23_Kas",
-                "Ene_24_Kas", "Feb_24_Kas", "Mar_24_Kas", "KasActual", "nov_23",
+                "supervisor", "PlanMigr", "sectorZona", "latitude", "longitude","nov_23",
                 "Dic_23", "En_24", "Feb_24", "Mar_24", "AvanceAntes", "avanActual",
-                "Proyección", "Var_Mar_Abr", "saldo", "regMontoProm", "trxHidra",
-                "comiHidra", "trxSEAL", "trxPgEfe", "Comi_PagEf", "trxTotalGE",
-                "trxTotalGC", "trxGIROS", "trxTinka", "trxFullPagos", "metaOZ",
-                "metaAg", "% AvanceFull", "Equipo", "¿Visitado?"
+                "Proyección", "Var_Mar_Abr", "saldo", "regMontoProm"
             ]
             
             for field in fields:

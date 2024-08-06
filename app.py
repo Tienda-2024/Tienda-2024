@@ -63,7 +63,7 @@ try:
     client = MongoClient("mongodb+srv://mhuaman:0AcY7h5YMFqWCvRS@innova.gfmnmzd.mongodb.net/?retryWrites=true&w=majority&appName=Innova")
     db = client["mhuaman"]
     collection = db["tb_tiendas"]
-    st.success("Conexión a MongoDB exitosa")
+    #st.success("Conexión a MongoDB exitosa")
 except errors.ConnectionError:
     st.error("No se pudo conectar a MongoDB. Verifique la URL y las credenciales.")
     st.stop()  # Detiene la ejecución del script si no se puede conectar

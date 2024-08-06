@@ -6,16 +6,6 @@
 import streamlit as st
 from pymongo import MongoClient, errors
 
-# Intentar conectar a MongoDB
-try:
-    client = MongoClient("mongodb+srv://mhuaman:0AcY7h5YMFqWCvRS@innova.gfmnmzd.mongodb.net/?retryWrites=true&w=majority&appName=Innova")
-    db = client["mhuaman"]
-    collection = db["tb_tiendas"]
-    # st.success("Conexión a MongoDB exitosa")
-except errors.ConnectionError:
-    st.error("No se pudo conectar a MongoDB. Verifique la URL y las credenciales.")
-    st.stop()  # Detiene la ejecución del script si no se puede conectar
-
 # Estilo CSS para mejorar la apariencia
 st.markdown(
     """
@@ -37,7 +27,6 @@ st.markdown(
         border: none;
         border-radius: 5px;
         padding: 10px;
-        height: 40px; /* Ajusta la altura del botón */
     }
     .stButton>button:hover {
         background-color: #0056b3;
@@ -47,48 +36,33 @@ st.markdown(
         border: 2px solid #007bff;
         border-radius: 5px;
         padding: 10px;
-        height: 40px; /* Ajusta la altura del input */
     }
     .stWrite {
         margin-bottom: 5px; /* Reduce el espacio entre los campos */
-    }
-    /* Estilo para alinear el título y el input en la parte superior */
-    .stHeader {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-    }
-    .stHeader .stTitle {
-        margin: 0;
-        font-size: 24px;
-    }
-    .stHeader .stTextInput {
-        flex-grow: 1;
-        margin-right: 10px;
     }
     </style>
     """,
     unsafe_allow_html=True
 )
 
-# Título de la aplicación y entrada en la parte superior
-st.markdown(
-    """
-    <div class="stHeader">
-        <div class="stTitle">Agentes Kasnet</div>
-        <div class="stTextInput">{}</div>
-        <div class="stButton">{}</div>
-    </div>
-    """.format(
-        st.text_input("Ingrese el idCodigo para buscar la tienda", key="input_id_codigo"),
-        st.button("Buscar", key="btn_buscar")
-    ),
-    unsafe_allow_html=True
-)
+# Intentar conectar a MongoDB
+try:
+    client = MongoClient("mongodb+srv://mhuaman:0AcY7h5YMFqWCvRS@innova.gfmnmzd.mongodb.net/?retryWrites=true&w=majority&appName=Innova")
+    db = client["mhuaman"]
+    collection = db["tb_tiendas"]
+    # st.success("Conexión a MongoDB exitosa")
+except errors.ConnectionError:
+    st.error("No se pudo conectar a MongoDB. Verifique la URL y las credenciales.")
+    st.stop()  # Detiene la ejecución del script si no se puede conectar
+
+# Título de la aplicación
+st.title("Agentes Kasnet")
+
+# Entrada de texto para buscar por idCodigo
+id_codigo = st.text_input("Ingrese el idCodigo para buscar la tienda")
 
 # Botón para ejecutar la búsqueda
-if st.session_state.get("btn_buscar"):
-    id_codigo = st.session_state.input_id_codigo
+if st.button("Buscar"):
     if id_codigo:
         result = collection.find_one({"idCodigo": id_codigo})
         if result:
@@ -110,4 +84,3 @@ if st.session_state.get("btn_buscar"):
             st.error("No se encontró ninguna tienda con el idCodigo proporcionado.")
     else:
         st.error("Por favor, ingrese un idCodigo.")
-

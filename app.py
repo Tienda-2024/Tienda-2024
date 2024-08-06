@@ -6,7 +6,7 @@
 import streamlit as st
 from pymongo import MongoClient, errors
 
-# Estilo CSS para mejorar la apariencia y ocultar elementos
+# Estilo CSS para mejorar la apariencia
 st.markdown(
     """
     <style>
@@ -37,24 +37,11 @@ st.markdown(
         border-radius: 5px;
         padding: 10px;
     }
-    /* Estilo para el título de la aplicación */
-    .stTitle {
-        margin-top: -40px;
-        font-size: 10px;
-    }
-    /* Ocultar ícono de GitHub y menú de opciones, mostrar solo Share */
-    header .decoration, header [data-testid="stDecoration"] {
-        display: none;
-    }
-    header [data-testid="stToolbar"] {
-        display: flex;
-        justify-content: space-between;
-    }
-    header [data-testid="stToolbar"] > div:nth-child(2) {
-        display: none;
+    .stWrite {
+        margin-bottom: 5px; /* Reduce el espacio entre los campos */
     }
     </style>
-    """, 
+    """,
     unsafe_allow_html=True
 )
 
@@ -63,7 +50,7 @@ try:
     client = MongoClient("mongodb+srv://mhuaman:0AcY7h5YMFqWCvRS@innova.gfmnmzd.mongodb.net/?retryWrites=true&w=majority&appName=Innova")
     db = client["mhuaman"]
     collection = db["tb_tiendas"]
-    #st.success("Conexión a MongoDB exitosa")
+    # st.success("Conexión a MongoDB exitosa")
 except errors.ConnectionError:
     st.error("No se pudo conectar a MongoDB. Verifique la URL y las credenciales.")
     st.stop()  # Detiene la ejecución del script si no se puede conectar
@@ -72,7 +59,7 @@ except errors.ConnectionError:
 st.title("Agentes Kasnet")
 
 # Entrada de texto para buscar por idCodigo
-id_codigo = st.text_input("Ingrese el idCodigo para buscar la tienda:")
+id_codigo = st.text_input("Ingrese el idCodigo para buscar la tienda")
 
 # Botón para ejecutar la búsqueda
 if st.button("Buscar"):
@@ -82,16 +69,17 @@ if st.button("Buscar"):
             # Mostrar los campos disponibles
             fields = [
                 "idCodigo", "idPGY", "nombreTienda", "departamento", "provincia",
-                "distrito", "direccion", "Longitud", "telefono_1",
+                "distrito", "direccion", "Longitud", "tipoPGY", "telefono_1",
                 "telefono_2", "categoría", "region", "zona", "Operador Zonal", 
-               "nov_23",
+                "supervisor", "PlanMigr", "sectorZona", "latitude", "longitude",
+                "nov_23",
                 "Dic_23", "En_24", "Feb_24", "Mar_24", "AvanceAntes", "avanActual",
                 "Proyección"
             ]
             
             for field in fields:
                 value = result.get(field, "N/A")
-                st.write(f"**{field}:**", value)
+                st.markdown(f"<div class='stWrite'><strong>{field}:</strong> {value}</div>", unsafe_allow_html=True)
         else:
             st.error("No se encontró ninguna tienda con el idCodigo proporcionado.")
     else:

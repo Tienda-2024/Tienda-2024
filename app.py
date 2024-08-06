@@ -39,8 +39,8 @@ st.markdown(
     }
     /* Estilo para el título de la aplicación */
     .stTitle {
-        margin-top: -50px;
-        font-size: 24px;
+        margin-top: -40px;
+        font-size: 10px;
     }
     /* Ocultar ícono de GitHub y menú de opciones, mostrar solo Share */
     header .decoration, header [data-testid="stDecoration"] {

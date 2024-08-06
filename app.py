@@ -6,6 +6,16 @@
 import streamlit as st
 from pymongo import MongoClient, errors
 
+# Intentar conectar a MongoDB
+try:
+    client = MongoClient("mongodb+srv://mhuaman:0AcY7h5YMFqWCvRS@innova.gfmnmzd.mongodb.net/?retryWrites=true&w=majority&appName=Innova")
+    db = client["mhuaman"]
+    collection = db["tb_tiendas"]
+    # st.success("Conexión a MongoDB exitosa")
+except errors.ConnectionError:
+    st.error("No se pudo conectar a MongoDB. Verifique la URL y las credenciales.")
+    st.stop()  # Detiene la ejecución del script si no se puede conectar
+
 # Estilo CSS para mejorar la apariencia
 st.markdown(
     """
@@ -61,16 +71,6 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-# Intentar conectar a MongoDB
-try:
-    client = MongoClient("mongodb+srv://mhuaman:0AcY7h5YMFqWCvRS@innova.gfmnmzd.mongodb.net/?retryWrites=true&w=majority&appName=Innova")
-    db = client["mhuaman"]
-    collection = db["tb_tiendas"]
-    # st.success("Conexión a MongoDB exitosa")
-except errors.ConnectionError:
-    st.error("No se pudo conectar a MongoDB. Verifique la URL y las credenciales.")
-    st.stop()  # Detiene la ejecución del script si no se puede conectar
-
 # Título de la aplicación y entrada en la parte superior
 st.markdown(
     """
@@ -80,14 +80,15 @@ st.markdown(
         <div class="stButton">{}</div>
     </div>
     """.format(
-        st.text_input("Ingrese el idCodigo para buscar la tienda"),
-        st.button("Buscar")
+        st.text_input("Ingrese el idCodigo para buscar la tienda", key="input_id_codigo"),
+        st.button("Buscar", key="btn_buscar")
     ),
     unsafe_allow_html=True
 )
 
 # Botón para ejecutar la búsqueda
-if st.button("Buscar"):
+if st.session_state.get("btn_buscar"):
+    id_codigo = st.session_state.input_id_codigo
     if id_codigo:
         result = collection.find_one({"idCodigo": id_codigo})
         if result:
@@ -109,3 +110,4 @@ if st.button("Buscar"):
             st.error("No se encontró ninguna tienda con el idCodigo proporcionado.")
     else:
         st.error("Por favor, ingrese un idCodigo.")
+

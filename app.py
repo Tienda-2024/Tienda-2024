@@ -27,6 +27,7 @@ st.markdown(
         border: none;
         border-radius: 5px;
         padding: 10px;
+        height: 40px; /* Ajusta la altura del botón */
     }
     .stButton>button:hover {
         background-color: #0056b3;
@@ -36,9 +37,24 @@ st.markdown(
         border: 2px solid #007bff;
         border-radius: 5px;
         padding: 10px;
+        height: 40px; /* Ajusta la altura del input */
     }
     .stWrite {
         margin-bottom: 5px; /* Reduce el espacio entre los campos */
+    }
+    /* Estilo para alinear el título y el input en la parte superior */
+    .stHeader {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .stHeader .stTitle {
+        margin: 0;
+        font-size: 24px;
+    }
+    .stHeader .stTextInput {
+        flex-grow: 1;
+        margin-right: 10px;
     }
     </style>
     """,
@@ -55,11 +71,20 @@ except errors.ConnectionError:
     st.error("No se pudo conectar a MongoDB. Verifique la URL y las credenciales.")
     st.stop()  # Detiene la ejecución del script si no se puede conectar
 
-# Título de la aplicación
-st.title("Agentes Kasnet")
-
-# Entrada de texto para buscar por idCodigo
-id_codigo = st.text_input("Ingrese el idCodigo para buscar la tienda")
+# Título de la aplicación y entrada en la parte superior
+st.markdown(
+    """
+    <div class="stHeader">
+        <div class="stTitle">Agentes Kasnet</div>
+        <div class="stTextInput">{}</div>
+        <div class="stButton">{}</div>
+    </div>
+    """.format(
+        st.text_input("Ingrese el idCodigo para buscar la tienda"),
+        st.button("Buscar")
+    ),
+    unsafe_allow_html=True
+)
 
 # Botón para ejecutar la búsqueda
 if st.button("Buscar"):

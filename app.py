@@ -69,7 +69,7 @@ except errors.ConnectionError:
     st.stop()  # Detiene la ejecución del script si no se puede conectar
 
 # Título de la aplicación
-st.title("Buscador de Tiendas")
+st.title("Agentes Kasnet")
 
 # Entrada de texto para buscar por idCodigo
 id_codigo = st.text_input("Ingrese el idCodigo para buscar la tienda:")

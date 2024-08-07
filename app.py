@@ -6,45 +6,6 @@
 import streamlit as st
 from pymongo import MongoClient, errors
 
-# Estilo CSS para mejorar la apariencia
-st.markdown(
-    """
-    <style>
-    .reportview-container {
-        background: #f0f2f6;
-    }
-    .css-1d391kg {
-        background-color: #f0f2f6;
-    }
-    .css-10trblm {
-        background-color: #ffffff;
-        border-radius: 10px;
-        padding: 20px;
-    }
-    .stButton>button {
-        background-color: #007bff;
-        color: white;
-        border: none;
-        border-radius: 5px;
-        padding: 10px;
-    }
-    .stButton>button:hover {
-        background-color: #0056b3;
-        color: white;
-    }
-    .stTextInput>div>div>input {
-        border: 2px solid #007bff;
-        border-radius: 5px;
-        padding: 10px;
-    }
-    .stWrite {
-        margin-bottom: 5px; /* Reduce el espacio entre los campos */
-    }
-    </style>
-    """,
-    unsafe_allow_html=True
-)
-
 # Intentar conectar a MongoDB
 try:
     client = MongoClient("mongodb+srv://mhuaman:0AcY7h5YMFqWCvRS@innova.gfmnmzd.mongodb.net/?retryWrites=true&w=majority&appName=Innova")
@@ -55,32 +16,75 @@ except errors.ConnectionError:
     st.error("No se pudo conectar a MongoDB. Verifique la URL y las credenciales.")
     st.stop()  # Detiene la ejecución del script si no se puede conectar
 
-# Título de la aplicación
-st.title("Agentes Kasnet")
+# CSS personalizado para el texto
+st.markdown(
+    """
+    <style>
+    .custom-input-label {
+        font-size: 24px;
+        font-weight: bold;
+        text-align: center;
+        display: block;
+        margin-bottom: 10px;
+    }
+        .stTextInput>div>div>input {
+        border: 2px solid #007bff;
+        border-radius: 5px;
+    }
+    </style>
+    """,
+    unsafe_allow_html=True
+)
+
+# Variable de texto
+texto = "Buscador de tienda Kanset"
+
+# Mostrar el texto con el estilo personalizado
+st.markdown(f'<div class="custom-input-label">{texto}</div>', unsafe_allow_html=True)
 
 # Entrada de texto para buscar por idCodigo
-id_codigo = st.text_input("Ingrese el idCodigo para buscar la tienda")
+id_codigo = st.text_input(" ", placeholder="Ingrese el código de 6 dígitos", max_chars=6, key='id_codigo')
 
-# Botón para ejecutar la búsqueda
-if st.button("Buscar"):
-    if id_codigo:
-        result = collection.find_one({"idCodigo": id_codigo})
-        if result:
-            # Mostrar los campos disponibles
-            fields = [
-                "idCodigo", "idPGY", "nombreTienda", "departamento", "provincia",
-                "distrito", "direccion", "Longitud", "tipoPGY", "telefono_1",
-                "telefono_2", "categoría", "region", "zona", "Operador Zonal", 
-                "supervisor", "PlanMigr", "sectorZona", "latitude", "longitude",
-                "nov_23",
-                "Dic_23", "En_24", "Feb_24", "Mar_24", "AvanceAntes", "avanActual",
-                "Proyección"
-            ]
-            
-            for field in fields:
+# Validar que el input solo contiene números y tiene exactamente 6 dígitos
+if id_codigo.isdigit() and len(id_codigo) == 6:
+    result = collection.find_one({"idCodigo": id_codigo})
+    if result:
+        # Dividir los campos en tres grupos
+        fields_col1 = [
+            "idCodigo", "idPGY", "nombreTienda", "departamento", "provincia",
+            "distrito", "direccion"
+        ]
+        fields_col2 = [
+            "Longitud", "tipoPGY", "telefono_1", "telefono_2", "categoría",
+            "region", "zona"
+        ]
+        fields_col3 = [
+            "Operador Zonal", "supervisor", "PlanMigr", "sectorZona", "latitude", 
+            "longitude", "nov_23", "Dic_23", "En_24", "Feb_24", "Mar_24", 
+            "AvanceAntes", "avanActual", "Proyección"
+        ]
+
+        col1, col2, col3 = st.columns(3)
+        
+        # Mostrar los campos en columnas
+        with col1:
+            for field in fields_col1:
                 value = result.get(field, "N/A")
                 st.markdown(f"<div class='stWrite'><strong>{field}:</strong> {value}</div>", unsafe_allow_html=True)
-        else:
-            st.error("No se encontró ninguna tienda con el idCodigo proporcionado.")
+        
+        with col2:
+            for field in fields_col2:
+                value = result.get(field, "N/A")
+                st.markdown(f"<div class='stWrite'><strong>{field}:</strong> {value}</div>", unsafe_allow_html=True)
+        
+        with col3:
+            for field in fields_col3:
+                value = result.get(field, "N/A")
+                st.markdown(f"<div class='stWrite'><strong>{field}:</strong> {value}</div>", unsafe_allow_html=True)
     else:
-        st.error("Por favor, ingrese un idCodigo.")
+        st.error("No se encontró ninguna tienda con el idCodigo proporcionado")
+elif id_codigo:
+    if not id_codigo.isdigit():
+        st.error("El código debe ser numérico")
+    elif len(id_codigo) != 6:
+        st.error("El código debe tener exactamente 6 dígitos")

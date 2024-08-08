@@ -16,7 +16,7 @@ except errors.ConnectionError:
     st.error("No se pudo conectar a MongoDB. Verifique la URL y las credenciales.")
     st.stop()  # Detiene la ejecución del script si no se puede conectar
 
-# CSS personalizado para el texto y las columnas
+# CSS personalizado para el texto
 st.markdown(
     """
     <style>
@@ -27,16 +27,9 @@ st.markdown(
         display: block;
         margin-bottom: 1px;
     }
-    .stTextInput>div>div>input {
+        .stTextInput>div>div>input {
         border: 2px solid #007bff;
         border-radius: 5px;
-    }
-    .stColumn {
-        width: 100% !important;
-    }
-    .stWrite {
-        display: inline-block;
-        width: 45%;
     }
     </style>
     """,
@@ -59,21 +52,19 @@ if id_codigo.isdigit() and len(id_codigo) == 6:
         # Dividir los campos en tres grupos
         fields_col1 = [
             "idCodigo", "idPGY", "Tienda", "Departamento", "Provincia",
-            "Distrito", "Tipo_Agente","TipoPGY","Región","Zona","Categoría",
-            "Te_Extendemos_la_grati","Meta","% Alcance"
+            "Distrito","Región","Zona","Coordinador","Supervisor","Operador Zonal","Categoría",
+            "Tipo_Agente","TipoPGY","PlanMigr","Motivo_Garantía","Motivo_Garantía",
+           
         ]
         fields_col2 = [
-          "PlanMigr","Motivo_Garantía","Motivo_Garantía",
-           "Coordinador","Supervisor","Operador Zonal"
-            
-        ]
-        fields_col3 = [
               "Agt-23","Spt-23","Oct-23","Nov-23","Dic-23","Ene-24","Feb-24",
               "Mar-24","Abr-24", "May-24","Jun-24","Jul-24", "Agt-24",
+              "Te_Extendemos_la_grati","Meta","% Alcance",
             
         ]
 
-        col1, col2, col3 = st.columns([1, 1, 1])
+
+        col1, col2= st.columns(2)
         
         # Mostrar los campos en columnas
         with col1:
@@ -86,10 +77,7 @@ if id_codigo.isdigit() and len(id_codigo) == 6:
                 value = result.get(field, "N/A")
                 st.markdown(f"<div class='stWrite'><strong>{field}:</strong> {value}</div>", unsafe_allow_html=True)
         
-        with col3:
-            for field in fields_col3:
-                value = result.get(field, "N/A")
-                st.markdown(f"<div class='stWrite'><strong>{field}:</strong> {value}</div>", unsafe_allow_html=True)
+
     else:
         st.error("No se encontró ninguna tienda con el idCodigo proporcionado")
 elif id_codigo:

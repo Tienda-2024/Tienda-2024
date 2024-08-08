@@ -16,7 +16,7 @@ except errors.ConnectionError:
     st.error("No se pudo conectar a MongoDB. Verifique la URL y las credenciales.")
     st.stop()  # Detiene la ejecución del script si no se puede conectar
 
-# CSS personalizado para el texto
+# CSS personalizado para el texto y las columnas
 st.markdown(
     """
     <style>
@@ -25,11 +25,18 @@ st.markdown(
         font-weight: bold;
         text-align: center;
         display: block;
-        margin-bottom: 10px;
+        margin-bottom: 1px;
     }
-        .stTextInput>div>div>input {
+    .stTextInput>div>div>input {
         border: 2px solid #007bff;
         border-radius: 5px;
+    }
+    .stColumn {
+        width: 100% !important;
+    }
+    .stWrite {
+        display: inline-block;
+        width: 45%;
     }
     </style>
     """,
@@ -37,7 +44,7 @@ st.markdown(
 )
 
 # Variable de texto
-texto = "Buscador de tienda Kanset"
+texto = "Buscador de tienda Kasnet"
 
 # Mostrar el texto con el estilo personalizado
 st.markdown(f'<div class="custom-input-label">{texto}</div>', unsafe_allow_html=True)
@@ -51,20 +58,22 @@ if id_codigo.isdigit() and len(id_codigo) == 6:
     if result:
         # Dividir los campos en tres grupos
         fields_col1 = [
-            "idCodigo", "idPGY", "nombreTienda", "departamento", "provincia",
-            "distrito", "direccion"
+            "idCodigo", "idPGY", "Tienda", "Departamento", "Provincia",
+            "Distrito", "Tipo_Agente","TipoPGY","Región","Zona","Categoría",
+            "Te_Extendemos_la_grati","Meta","% Alcance"
         ]
         fields_col2 = [
-            "Longitud", "tipoPGY", "telefono_1", "telefono_2", "categoría",
-            "region", "zona"
+          "PlanMigr","Motivo_Garantía","Motivo_Garantía",
+           "Coordinador","Supervisor","Operador Zonal"
+            
         ]
         fields_col3 = [
-            "Operador Zonal", "supervisor", "PlanMigr", "sectorZona", "latitude", 
-            "longitude", "nov_23", "Dic_23", "En_24", "Feb_24", "Mar_24", 
-            "AvanceAntes", "avanActual", "Proyección"
+              "Agt-23","Spt-23","Oct-23","Nov-23","Dic-23","Ene-24","Feb-24",
+              "Mar-24","Abr-24", "May-24","Jun-24","Jul-24", "Agt-24",
+            
         ]
 
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3 = st.columns([1, 1, 1])
         
         # Mostrar los campos en columnas
         with col1:
